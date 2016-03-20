@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pokechu22.plugins</groupId>
 	<artifactId>WDLCompanionFactionsSupport</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>Factions support for WDLCompanion</name>
-	<description>Provides WDLCompanion chunk overrides for Factions.</description>
+	<description>Adds 2 new WDLCompanion ChunkOverride types, 'Owned faction' and 'Nearby factions', which allow a player to download in their own faction or nearby factions they have permission in.  Also defines some user-toggleable permissions so that each faction can choose who can download.</description>
 	<build>
 		<plugins>
 			<plugin>
