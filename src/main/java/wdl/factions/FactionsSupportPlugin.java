@@ -6,12 +6,18 @@ import java.util.Set;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
+import org.mcstats.Metrics.Plotter;
 
+import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.Rel;
 import com.massivecraft.factions.entity.MPerm;
 import com.massivecraft.factions.event.EventFactionsCreatePerms;
+import com.massivecraft.massivecore.MassiveCore;
 
 import wdl.RangeGroupTypeRegistrationEvent;
+import wdl.range.IRangeProducer;
 
 public class FactionsSupportPlugin extends JavaPlugin implements Listener {
 	@Override
@@ -19,6 +25,40 @@ public class FactionsSupportPlugin extends JavaPlugin implements Listener {
 		getOrRegisterDownloadPerm();
 		
 		getServer().getPluginManager().registerEvents(this, this);
+		
+		try {
+			class StringPlotter extends Plotter {
+				public StringPlotter(String str) {
+					super(str);
+				}
+				
+				@Override
+				public int getValue() {
+					return 1;
+				}
+			}
+			
+			Metrics metrics = new Metrics(this);
+			
+			Graph factionsVersionGraph = metrics.createGraph("factionsVersion");
+			String factionsVersion = getProvidingPlugin(Factions.class)
+					.getDescription().getFullName();
+			factionsVersionGraph.addPlotter(new StringPlotter(factionsVersion));
+			
+			Graph massiveCoreVersionGraph = metrics.createGraph("massiveCoreVersion");
+			String massiveCoreVersion = getProvidingPlugin(MassiveCore.class)
+					.getDescription().getFullName();
+			massiveCoreVersionGraph.addPlotter(new StringPlotter(massiveCoreVersion));
+			
+			Graph wdlcVersionGraph = metrics.createGraph("wdlcompanionVersion");
+			String wdlcVersion = getProvidingPlugin(IRangeProducer.class)
+					.getDescription().getFullName();
+			wdlcVersionGraph.addPlotter(new StringPlotter(wdlcVersion));
+			
+			metrics.start();
+		} catch (Exception e) {
+			getLogger().warning("Failed to start PluginMetrics :(");
+		}
 	}
 	
 	@EventHandler
